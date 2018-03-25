@@ -146,13 +146,22 @@ construct_url(SchemeNetloc, Path, Query) ->
 %%% INTERNAL ===================================================================
 
 do_request(post, Type, Url, Headers, Body, Options) ->
-    Body2 = encode_body(Type, Body),
+    Body2 = case proplists:get_value(no_request_body,Options,false) of
+		    true -> "";
+		    _ -> encode_body(Type, Body)
+	end,
     hackney:request(post, Url, Headers, Body2, Options);
 do_request(put, Type, Url, Headers, Body, Options) ->
-    Body2 = encode_body(Type, Body),
+    Body2 = case proplists:get_value(no_request_body,Options,false) of
+		    true -> "";
+		    _ -> encode_body(Type, Body)
+	end,
     hackney:request(put, Url, Headers, Body2, Options);
 do_request(patch, Type, Url, Headers, Body, Options) ->
-    Body2 = encode_body(Type, Body),
+    Body2 = case proplists:get_value(no_request_body,Options,false) of
+		    true -> "";
+		    _ -> encode_body(Type, Body)
+	end,
     hackney:request(patch, Url, Headers, Body2, Options);
 do_request(Method, _, Url, Headers, _, Options) when is_atom(Method) ->
     hackney:request(Method, Url, Headers, [], Options).
